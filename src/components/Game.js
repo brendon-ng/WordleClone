@@ -1,41 +1,34 @@
 import { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Guess from './Guess';
 import { MAX_GUESSES } from '../constants/gameConstants';
 import generateTargetWord from '../utils/generateWord';
 import { useDispatch, useSelector } from 'react-redux';
-import { addLoss, addWin, resetGuesses, resetKeyboard } from '../store';
+import { addLoss, addWin, resetGuesses } from '../store';
 
 const STATUS_ONGOING = 'ongoing';
 const STATUS_LOSS = 'loss';
 const STATUS_WIN = 'win';
 
-function Game(){
+function Game() {
   const dispatch = useDispatch();
 
   const [targetWord, setTargetWord] = useState(generateTargetWord());
   const [gameStatus, setGameStatus] = useState(STATUS_ONGOING);
 
-  const {currentGuess, guesses, validGuess} = useSelector((state) => {
+  const { currentGuess, guesses, validGuess } = useSelector((state) => {
     return state.guesses;
   });
 
-  
   useEffect(() => {
-    if(guesses[guesses.length-1] === targetWord){
+    if (guesses[guesses.length - 1] === targetWord) {
       setGameStatus(STATUS_WIN);
-      dispatch(addWin({guesses: guesses.length}));
+      dispatch(addWin({ guesses: guesses.length }));
     } else if (guesses.length === MAX_GUESSES) {
       setGameStatus(STATUS_LOSS);
       dispatch(addLoss());
     }
-  }, [guesses]);
-  
+  }, [guesses, dispatch, targetWord]);
 
   const newGame = () => {
     dispatch(resetGuesses());
@@ -48,18 +41,18 @@ function Game(){
       {Array.from(Array(MAX_GUESSES)).map((el, i) => (
         <Guess
           targetWord={targetWord}
-          guessedWord={guesses[i] || (i===guesses.length && currentGuess)}
-          complete={(guesses[i])}
-          invalid={i===guesses.length && !validGuess}
+          guessedWord={guesses[i] || (i === guesses.length && currentGuess)}
+          complete={guesses[i]}
+          invalid={i === guesses.length && !validGuess}
           key={i}
         />
       ))}
-      {gameStatus===STATUS_LOSS && (
+      {gameStatus === STATUS_LOSS && (
         <View style={styles.answer}>
           <Text style={styles.answerText}>{targetWord}</Text>
         </View>
       )}
-      {gameStatus===STATUS_WIN && (
+      {gameStatus === STATUS_WIN && (
         <View style={styles.answer}>
           <Text style={styles.answerText}>GREAT JOB!</Text>
         </View>
@@ -72,8 +65,8 @@ function Game(){
     </View>
   );
 
-  return (content);
-};
+  return content;
+}
 
 const styles = StyleSheet.create({
   guessContainer: {
@@ -106,7 +99,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontWeight: 'bold',
-    color: 'black'
+    color: 'black',
   },
   answer: {
     position: 'absolute',
@@ -120,7 +113,7 @@ const styles = StyleSheet.create({
   },
   answerText: {
     fontWeight: 'bold',
-    color: 'white'
+    color: 'white',
   },
 });
 

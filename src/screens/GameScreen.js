@@ -1,4 +1,10 @@
-import { View, StyleSheet, SafeAreaView, Text, TouchableOpacity, Dimensions } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Game from '../components/Game';
 import SquareView from '../components/SquareView';
@@ -17,11 +23,11 @@ function GameScreen() {
 
   const closeModal = () => {
     setModalVisible(false);
-  }
+  };
 
   const openModal = () => {
     setModalVisible(true);
-  }
+  };
 
   const screenHeight = Dimensions.get('window').height;
   const screenWidth = Dimensions.get('window').width;
@@ -39,11 +45,17 @@ function GameScreen() {
         <Keyboard />
       </View>
       <TouchableOpacity style={styles.statsButton} onPress={openModal}>
-        <Ionicons name='bar-chart' size={30}/>
+        <Ionicons name="bar-chart" size={30} />
       </TouchableOpacity>
-      {modalVisible && <TouchableOpacity style={styles.screenView} onPress={closeModal}>
-        <ScoresModal closeModal={closeModal} height={screenHeight*0.75} width={screenWidth*0.80}/>
-      </TouchableOpacity>}
+      {modalVisible && (
+        <TouchableOpacity style={styles.screenView} onPress={closeModal}>
+          <ScoresModal
+            closeModal={closeModal}
+            height={screenHeight * 0.75}
+            width={screenWidth * 0.8}
+          />
+        </TouchableOpacity>
+      )}
     </SafeAreaView>
   );
 }
@@ -88,7 +100,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.2)',
-  }
+  },
 });
 
 export default GameScreen;

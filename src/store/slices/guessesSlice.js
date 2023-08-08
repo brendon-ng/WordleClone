@@ -13,18 +13,18 @@ const guessesSlice = createSlice({
   initialState,
   reducers: {
     typeIntoCurrentGuess(state, action) {
-      if(state.currentGuess.length <= MAX_WORD_LENGTH){
+      if (state.currentGuess.length <= MAX_WORD_LENGTH) {
         state.currentGuess = state.currentGuess + action.payload;
         state.validGuess = true;
       }
     },
-    deleteFromCurrentGuess(state){
-        state.currentGuess = state.currentGuess.slice(0, -1);
-        state.validGuess = true;
+    deleteFromCurrentGuess(state) {
+      state.currentGuess = state.currentGuess.slice(0, -1);
+      state.validGuess = true;
     },
-    submitGuess(state){
-      if(state.currentGuess.length === MAX_WORD_LENGTH){
-        if(checkWord(state.currentGuess)){
+    submitGuess(state) {
+      if (state.currentGuess.length === MAX_WORD_LENGTH) {
+        if (checkWord(state.currentGuess)) {
           state.guesses.push(state.currentGuess);
           state.currentGuess = '';
           state.validGuess = true;
@@ -33,11 +33,16 @@ const guessesSlice = createSlice({
         }
       }
     },
-    resetGuesses(){
+    resetGuesses() {
       return initialState;
-    }
+    },
   },
 });
 
-export const { deleteFromCurrentGuess, typeIntoCurrentGuess, submitGuess, resetGuesses } = guessesSlice.actions;
+export const {
+  deleteFromCurrentGuess,
+  typeIntoCurrentGuess,
+  submitGuess,
+  resetGuesses,
+} = guessesSlice.actions;
 export const guessesReducer = guessesSlice.reducer;

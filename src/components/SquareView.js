@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 const calcViewSize = (parentLayout, maxHeightPct, maxWidthPct) => {
   const size = Math.min(

@@ -1,6 +1,11 @@
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeKeyColor, deleteFromCurrentGuess, submitGuess, typeIntoCurrentGuess } from '../store';
+import {
+  deleteFromCurrentGuess,
+  submitGuess,
+  typeIntoCurrentGuess,
+} from '../store';
+import { DELETE, ENTER } from '../constants/keyboardConstants';
 
 const DEF_WIDTH = 7.5;
 
@@ -12,9 +17,9 @@ function Key({ letter, widthMultiplier }) {
   });
 
   const handlePress = () => {
-    if(letter === 'DEL'){
+    if (letter === DELETE) {
       dispatch(deleteFromCurrentGuess());
-    } else if (letter === 'ENTER'){
+    } else if (letter === ENTER) {
       dispatch(submitGuess());
     } else {
       dispatch(typeIntoCurrentGuess(letter));

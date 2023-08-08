@@ -1,11 +1,12 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Key from './Key';
+import { DELETE, ENTER } from '../constants/keyboardConstants';
 
 function Keyboard() {
   const row1 = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'];
   const row2 = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'];
   const row3 = [
-    { letter: 'ENTER', w: 2 },
+    { letter: ENTER, w: 2 },
     { letter: 'Z' },
     { letter: 'X' },
     { letter: 'C' },
@@ -13,7 +14,7 @@ function Keyboard() {
     { letter: 'B' },
     { letter: 'N' },
     { letter: 'M' },
-    { letter: 'DEL', w: 2 },
+    { letter: DELETE, w: 2 },
   ];
   return (
     <View style={styles.container}>

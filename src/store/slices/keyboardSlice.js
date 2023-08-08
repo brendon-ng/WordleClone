@@ -1,5 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { COLOR_CORRECT, COLOR_POSITION, COLOR_UNGUESSED, COLOR_WRONG, MAX_WORD_LENGTH } from '../../constants/gameConstants';
+import {
+  COLOR_CORRECT,
+  COLOR_POSITION,
+  COLOR_UNGUESSED,
+  COLOR_WRONG,
+} from '../../constants/gameConstants';
 import { resetGuesses } from './guessesSlice';
 
 const initialState = {
@@ -32,8 +37,8 @@ const initialState = {
     Z: COLOR_UNGUESSED,
     ENTER: COLOR_UNGUESSED,
     DEL: COLOR_UNGUESSED,
-  }
-}
+  },
+};
 
 const keyboardSlice = createSlice({
   name: 'keyboard',
@@ -41,18 +46,24 @@ const keyboardSlice = createSlice({
   reducers: {
     changeKeyColor(state, action) {
       // assume action is an object with letter: <letter typed>, color: <color>
-      if(action.payload.color === COLOR_CORRECT){
+      if (action.payload.color === COLOR_CORRECT) {
         state.colors[action.payload.letter] = action.payload.color;
-      } else if(action.payload.color === COLOR_POSITION && state.colors[action.payload.letter] === COLOR_UNGUESSED){
+      } else if (
+        action.payload.color === COLOR_POSITION &&
+        state.colors[action.payload.letter] === COLOR_UNGUESSED
+      ) {
         state.colors[action.payload.letter] = action.payload.color;
-      } else if(action.payload.color === COLOR_WRONG && state.colors[action.payload.letter] === COLOR_UNGUESSED) {
+      } else if (
+        action.payload.color === COLOR_WRONG &&
+        state.colors[action.payload.letter] === COLOR_UNGUESSED
+      ) {
         state.colors[action.payload.letter] = action.payload.color;
       }
-    }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(resetGuesses, () => initialState);
-  }
+  },
 });
 
 export const { changeKeyColor } = keyboardSlice.actions;
