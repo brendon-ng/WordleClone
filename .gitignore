@@ -33,3 +33,7 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# Utils
+src/utils/*.txt
+src/utils/convert.js
