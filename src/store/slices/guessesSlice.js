@@ -13,7 +13,7 @@ const guessesSlice = createSlice({
   initialState,
   reducers: {
     typeIntoCurrentGuess(state, action) {
-      if (state.currentGuess.length <= MAX_WORD_LENGTH) {
+      if (state.currentGuess.length < MAX_WORD_LENGTH) {
         state.currentGuess = state.currentGuess + action.payload;
         state.validGuess = true;
       }
