@@ -50,15 +50,10 @@ function Guess({ targetWord, guessedWord, complete, invalid }) {
   }
 
   squares = squares.map((col, i) => {
-    const color = invalid ? 'red' : (complete ? 'white' : 'black');
+    const color = invalid ? 'red' : complete ? 'white' : 'black';
     return (
       <View key={i} style={[styles.square, { backgroundColor: col }]}>
-        <Text
-          style={[
-            styles.letter,
-            { color },
-          ]}
-        >
+        <Text style={[styles.letter, { color }]}>
           {guessedWord && guessedWord[i] && guessedWord[i].toUpperCase()}
         </Text>
       </View>

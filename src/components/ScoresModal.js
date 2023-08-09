@@ -17,17 +17,12 @@ function ScoresModal({ closeModal, height, width }) {
   const max = Math.max(...guessDist);
 
   const histogram = guessDist.map((val, i) => {
-    const width = val > 0 ? `${(100 * val) / max}%` : 'NaN%';
+    const w = val > 0 ? `${(100 * val) / max}%` : 'NaN%';
     return (
       <View key={i} style={styles.histogramBar}>
         <Text style={styles.axisNumber}>{i + 1}</Text>
         <View style={styles.barContainer}>
-          <View
-            style={[
-              styles.bar,
-              { width },
-            ]}
-          >
+          <View style={[styles.bar, { w }]}>
             <Text style={styles.value}>{val}</Text>
           </View>
         </View>
