@@ -16,8 +16,7 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.ng.b.788.Wordle"
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
@@ -27,17 +26,6 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "2d788b48-9ed1-4267-a303-423f9426fe9d"
-      }
-    },
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/2d788b48-9ed1-4267-a303-423f9426fe9d"
     }
   }
 }
