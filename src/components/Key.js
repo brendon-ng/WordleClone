@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: '1%',
     backgroundColor: 'cyan',
-    borderRadius: '5%',
+    borderRadius: 5,
   },
   text: {
     fontWeight: 'bold',

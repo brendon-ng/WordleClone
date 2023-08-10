@@ -27,6 +27,7 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
+          <string>wordle</string>
           <string>com.brendon.ng.wordle</string>
         </array>
       </dict>
