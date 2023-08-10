@@ -37,3 +37,6 @@ yarn-error.*
 # Utils
 src/utils/*.txt
 src/utils/convert.js
+
+# Secrets
+secrets.js
