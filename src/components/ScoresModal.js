@@ -1,7 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { signOut } from 'firebase/auth';
 import { COLOR_CORRECT } from '../constants/gameConstants';
+import { auth } from '../../firebaseConfig';
 
 function ScoresModal({ closeModal, height, width }) {
   const { gamesPlayed, gamesWon, curStreak, largestStreak, guessDist } =
@@ -12,6 +15,11 @@ function ScoresModal({ closeModal, height, width }) {
   const handleOverlayPress = (event) => {
     event.stopPropagation();
     console.log('MODAL PRESSED');
+  };
+
+  const handleSignOut = async () => {
+    await AsyncStorage.removeItem('@user');
+    signOut(auth);
   };
 
   const max = Math.max(...guessDist);
@@ -66,7 +74,14 @@ function ScoresModal({ closeModal, height, width }) {
         </View>
       </View>
       <View style={styles.histogramContainer}>{histogram}</View>
-      <View style={styles.bottomContainer} />
+      <View style={styles.bottomContainer}>
+        <TouchableOpacity
+          style={styles.signOutButton}
+          onPress={async () => handleSignOut()}
+        >
+          <Text>Sign Out</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -160,6 +175,17 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     height: '20%',
+  },
+  signOutButton: {
+    height: '20%',
+    aspectRatio: 3,
+    backgroundColor: 'lightgrey',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  signOutLabel: {
+    fontWeight: 'bold',
   },
 });
 
