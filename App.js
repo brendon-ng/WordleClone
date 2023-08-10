@@ -14,24 +14,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 import { ANDROID_CLIENT_ID, IOS_CLIENT_ID } from './secrets';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { OFFLINE_USER } from './src/constants/apiConstants';
 
 WebBrowser.maybeCompleteAuthSession();
-
-/*
-const navigator = createStackNavigator(
-  {
-    Game: GameScreen,
-  },
-  {
-    initialRouteName: 'Game',
-    defaultNavigationOptions: {
-      title: 'WORDLE',
-      headerShown: false,
-    },
-  }
-);*/
-
-//const AppContainer = createAppContainer(navigator);
 
 const App = () => {
   const [userInfo, setUserInfo] = useState();
@@ -44,6 +29,13 @@ const App = () => {
   const promptAsyncPlusLoading = () => {
     setLoading(true);
     promptAsync();
+  };
+
+  const useAppOffline = () => {
+    setLoading(false);
+    setUserInfo({
+      uid: OFFLINE_USER,
+    });
   };
 
   const checkLocalUser = async () => {
@@ -72,7 +64,7 @@ const App = () => {
     checkLocalUser();
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        console.log(user.email);
+        console.log(JSON.stringify(user));
         setUserInfo(user);
         await AsyncStorage.setItem('@user', JSON.stringify(user));
         setLoading(false);
@@ -92,7 +84,10 @@ const App = () => {
       ) : userInfo ? (
         <GameScreen />
       ) : (
-        <SignInScreen promptAsync={promptAsyncPlusLoading} />
+        <SignInScreen
+          promptAsync={promptAsyncPlusLoading}
+          useOffline={useAppOffline}
+        />
       )}
     </Provider>
   );
