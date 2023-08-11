@@ -64,6 +64,11 @@ const Application = () => {
       const { id_token } = response.params;
       const credential = GoogleAuthProvider.credential(id_token);
       signInWithCredential(auth, credential);
+    } else if (response?.type === 'cancel') {
+      setLoading(false);
+    } else {
+      setLoading(false);
+      console.log('Response from login:', response);
     }
   }, [response]);
 
