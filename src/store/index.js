@@ -10,6 +10,7 @@ import {
   submitGuess,
   resetGuesses,
 } from './slices/guessesSlice';
+import { userReducer, setUserInfo } from './slices/userSlice';
 
 export const store = configureStore({
   reducer: {
@@ -17,9 +18,12 @@ export const store = configureStore({
     scores: scoresReducer,
     keyboard: keyboardReducer,
     guesses: guessesReducer,
+    user: userReducer,
   },
   middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware().concat(wordApi.middleware);
+    return getDefaultMiddleware({
+      serializableCheck: false,
+    }).concat(wordApi.middleware);
   },
 });
 
@@ -34,4 +38,5 @@ export {
   resetGuesses,
   addWin,
   addLoss,
+  setUserInfo,
 };

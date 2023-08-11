@@ -1,16 +1,22 @@
 import { Ionicons } from '@expo/vector-icons';
 import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { signOut } from 'firebase/auth';
 import { COLOR_CORRECT } from '../constants/gameConstants';
 import { auth } from '../../firebaseConfig';
+import { setUserInfo } from '../store';
+import { OFFLINE_USER } from '../constants/apiConstants';
 
 function ScoresModal({ closeModal, height, width }) {
+  const dispatch = useDispatch();
   const { gamesPlayed, gamesWon, curStreak, largestStreak, guessDist } =
     useSelector((state) => {
       return state.scores;
     });
+  const { userInfo } = useSelector((state) => {
+    return state.user;
+  });
 
   const handleOverlayPress = (event) => {
     event.stopPropagation();
@@ -20,6 +26,7 @@ function ScoresModal({ closeModal, height, width }) {
   const handleSignOut = async () => {
     await AsyncStorage.removeItem('@user');
     signOut(auth);
+    dispatch(setUserInfo(null));
   };
 
   const max = Math.max(...guessDist);
@@ -30,7 +37,7 @@ function ScoresModal({ closeModal, height, width }) {
       <View key={i} style={styles.histogramBar}>
         <Text style={styles.axisNumber}>{i + 1}</Text>
         <View style={styles.barContainer}>
-          <View style={[styles.bar, { w }]}>
+          <View style={[styles.bar, { width: w }]}>
             <Text style={styles.value}>{val}</Text>
           </View>
         </View>
@@ -79,7 +86,7 @@ function ScoresModal({ closeModal, height, width }) {
           style={styles.signOutButton}
           onPress={async () => handleSignOut()}
         >
-          <Text>Sign Out</Text>
+          <Text>{userInfo.uid === OFFLINE_USER ? 'Sign In' : 'Sign Out'}</Text>
         </TouchableOpacity>
       </View>
     </View>
