@@ -8,7 +8,7 @@ import {
   onAuthStateChanged,
   signInWithCredential,
 } from 'firebase/auth';
-import { auth } from '../firebaseConfig';
+import { firebase_auth } from '../firebaseConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useCallback, useEffect, useState } from 'react';
 import { ANDROID_CLIENT_ID, IOS_CLIENT_ID } from '../secrets';
@@ -41,6 +41,7 @@ const Application = () => {
     dispatch(
       setUserInfo({
         uid: OFFLINE_USER,
+        email: OFFLINE_USER,
       })
     );
   };
@@ -63,7 +64,7 @@ const Application = () => {
     if (response?.type === 'success') {
       const { id_token } = response.params;
       const credential = GoogleAuthProvider.credential(id_token);
-      signInWithCredential(auth, credential);
+      signInWithCredential(firebase_auth, credential);
     } else if (response?.type === 'cancel') {
       setLoading(false);
     } else {
@@ -74,7 +75,7 @@ const Application = () => {
 
   useEffect(() => {
     checkLocalUser();
-    const unsub = onAuthStateChanged(auth, async (user) => {
+    const unsub = onAuthStateChanged(firebase_auth, async (user) => {
       if (user) {
         console.log(JSON.stringify(user));
         dispatch(setUserInfo(user));

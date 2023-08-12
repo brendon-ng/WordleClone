@@ -3,20 +3,83 @@ import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { signOut } from 'firebase/auth';
-import { COLOR_CORRECT } from '../constants/gameConstants';
-import { auth } from '../../firebaseConfig';
+import { COLOR_CORRECT, MAX_GUESSES } from '../constants/gameConstants';
+import { firebase_auth, firestore_db } from '../../firebaseConfig';
 import { setUserInfo } from '../store';
 import { OFFLINE_USER } from '../constants/apiConstants';
+import { useEffect, useState } from 'react';
+import { onSnapshot, doc, setDoc } from 'firebase/firestore';
 
 function ScoresModal({ closeModal, height, width }) {
   const dispatch = useDispatch();
-  const { gamesPlayed, gamesWon, curStreak, largestStreak, guessDist } =
-    useSelector((state) => {
-      return state.scores;
-    });
+  const [gamesPlayed, setGamesPlayed] = useState(0);
+  const [gamesWon, setGamesWon] = useState(0);
+  const [curStreak, setCurStreak] = useState(0);
+  const [largestStreak, setLargestStreak] = useState(0);
+  const [guessDist, setGuessDist] = useState([]);
+  const [resetStats, setResetStats] = useState(0);
+
   const { userInfo } = useSelector((state) => {
     return state.user;
   });
+
+  useEffect(() => {
+    if (userInfo.uid === OFFLINE_USER) {
+      AsyncStorage.getItem('@scores').then((scoresJSON) => {
+        if (scoresJSON) {
+          const scoresData = JSON.parse(scoresJSON);
+          setGamesPlayed(scoresData.gamesPlayed);
+          setGamesWon(scoresData.gamesWon);
+          setCurStreak(scoresData.curStreak);
+          setLargestStreak(scoresData.largestStreak);
+          setGuessDist(scoresData.guessDist);
+        } else {
+          const scoresData = {
+            gamesPlayed: 0,
+            gamesWon: 0,
+            curStreak: 0,
+            largestStreak: 0,
+            guessDist: Array.from({ length: MAX_GUESSES }, () => 0),
+          };
+          AsyncStorage.setItem('@scores', JSON.stringify(scoresData)).then(
+            () => {
+              setGamesPlayed(scoresData.gamesPlayed);
+              setGamesWon(scoresData.gamesWon);
+              setCurStreak(scoresData.curStreak);
+              setLargestStreak(scoresData.largestStreak);
+              setGuessDist(scoresData.guessDist);
+              console.log('Initialized Local Storage scores');
+            }
+          );
+        }
+      });
+    } else {
+      const ref = doc(firestore_db, `scores/${userInfo.uid}`);
+      const subscriber = onSnapshot(ref, {
+        next: (snapshot) => {
+          const data = snapshot.data();
+          if (data) {
+            setGamesPlayed(data.gamesPlayed);
+            setGamesWon(data.gamesWon);
+            setCurStreak(data.curStreak);
+            setLargestStreak(data.largestStreak);
+            setGuessDist(data.guessDist);
+          } else {
+            setDoc(doc(firestore_db, 'scores', userInfo.uid), {
+              gamesPlayed: 0,
+              gamesWon: 0,
+              curStreak: 0,
+              largestStreak: 0,
+              guessDist: Array.from({ length: MAX_GUESSES }, () => 0),
+            });
+            console.log('Doc Created');
+          }
+        },
+      });
+
+      return () => subscriber();
+    }
+  }, [userInfo, resetStats]);
 
   const handleOverlayPress = (event) => {
     event.stopPropagation();
@@ -25,8 +88,13 @@ function ScoresModal({ closeModal, height, width }) {
 
   const handleSignOut = async () => {
     await AsyncStorage.removeItem('@user');
-    signOut(auth);
+    signOut(firebase_auth);
     dispatch(setUserInfo(null));
+  };
+
+  const clearLocalStats = async () => {
+    await AsyncStorage.removeItem('@scores');
+    setResetStats(resetStats + 1);
   };
 
   const max = Math.max(...guessDist);
@@ -88,6 +156,14 @@ function ScoresModal({ closeModal, height, width }) {
         >
           <Text>{userInfo.uid === OFFLINE_USER ? 'Sign In' : 'Sign Out'}</Text>
         </TouchableOpacity>
+        {userInfo.uid === OFFLINE_USER && (
+          <TouchableOpacity
+            style={styles.signOutButton}
+            onPress={async () => clearLocalStats()}
+          >
+            <Text>Clear Stats</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -184,12 +260,13 @@ const styles = StyleSheet.create({
     height: '20%',
   },
   signOutButton: {
-    height: '20%',
+    height: '30%',
     aspectRatio: 3,
     backgroundColor: 'lightgrey',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 10,
   },
   signOutLabel: {
     fontWeight: 'bold',
