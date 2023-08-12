@@ -32,9 +32,6 @@ function Game() {
           if (scoresJSON) {
             const scoresData = JSON.parse(scoresJSON);
             scoresData.gamesPlayed = scoresData.gamesPlayed + 1;
-            scoresData.gamesPlayed = scoresData.gamesPlayed + 1;
-            scoresData.curStreak = 0;
-            scoresData.gamesPlayed = scoresData.gamesPlayed + 1;
             scoresData.gamesWon = scoresData.gamesWon + 1;
             const newStreak = scoresData.curStreak + 1;
             scoresData.curStreak = newStreak;
