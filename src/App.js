@@ -1,5 +1,4 @@
 import GameScreen from './screens/GameScreen';
-
 import SignInScreen from './screens/SigninScreen';
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
@@ -31,11 +30,13 @@ const Application = () => {
     androidClientId: ANDROID_CLIENT_ID,
   });
 
+  // Handle Google Login press
   const promptAsyncPlusLoading = () => {
     setLoading(true);
     promptAsync();
   };
 
+  // Handle Play Offline Button Press
   const useAppOffline = () => {
     setLoading(false);
     dispatch(
@@ -60,6 +61,7 @@ const Application = () => {
     }
   }, [dispatch]);
 
+  // Respond to result of Google Login
   useEffect(() => {
     if (response?.type === 'success') {
       const { id_token } = response.params;
@@ -73,12 +75,14 @@ const Application = () => {
     }
   }, [response]);
 
+  // Respond to changes to the user authentication
   useEffect(() => {
     checkLocalUser();
     const unsub = onAuthStateChanged(firebase_auth, async (user) => {
       if (user) {
         console.log(JSON.stringify(user));
         dispatch(setUserInfo(user));
+        // Store authentication locally for login persistence
         await AsyncStorage.setItem('@user', JSON.stringify(user));
         setLoading(false);
       } else {

@@ -13,9 +13,14 @@ import Keyboard from '../components/Keyboard';
 import ScoresModal from '../components/ScoresModal';
 
 function GameScreen() {
+  // States
   const [modalVisible, setModalVisible] = useState(false);
   const [parentLayout, setParentLayout] = useState({ width: 0, height: 0 });
 
+  const screenHeight = Dimensions.get('window').height;
+  const screenWidth = Dimensions.get('window').width;
+
+  // To get the height and width of parent containers (to pass to SquareView)
   const handleLayout = (event) => {
     const { width, height } = event.nativeEvent.layout;
     setParentLayout({ width, height });
@@ -28,9 +33,6 @@ function GameScreen() {
   const openModal = () => {
     setModalVisible(true);
   };
-
-  const screenHeight = Dimensions.get('window').height;
-  const screenWidth = Dimensions.get('window').width;
 
   return (
     <SafeAreaView style={styles.container} onLayout={handleLayout}>

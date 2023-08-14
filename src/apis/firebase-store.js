@@ -1,22 +1,31 @@
-import { doc, getDoc, setDoc, runTransaction } from 'firebase/firestore';
+import {
+  doc,
+  getDoc,
+  setDoc,
+  runTransaction,
+  onSnapshot,
+} from 'firebase/firestore';
 import { firestore_db } from '../../firebaseConfig';
-import { MAX_GUESSES } from '../constants/gameConstants';
+import {
+  INITIAL_SCORES_RECORD,
+  LOSS,
+  NEW,
+  WIN,
+} from '../constants/scoreConstants';
 
+// Record win in firebase store for the given user.
 export const addWinFB = async (userInfo, numGuesses) => {
   const ref = doc(firestore_db, 'scores', userInfo.uid);
   const snap = await getDoc(ref);
   if (!snap.exists()) {
-    setDoc(doc(firestore_db, 'scores', userInfo.uid), {
-      gamesPlayed: 1,
-      gamesWon: 1,
-      curStreak: 1,
-      largestStreak: 1,
-      guessDist: Array.from({ length: MAX_GUESSES }, (e, i) =>
-        i === numGuesses - 1 ? 1 : 0
-      ),
-    });
+    // If no record of scores have been recorded for this user, initialize a document with a win
+    setDoc(
+      doc(firestore_db, 'scores', userInfo.uid),
+      INITIAL_SCORES_RECORD(WIN, numGuesses)
+    );
     console.log('Doc Created');
   } else {
+    // Run Transaction to atomically update the document depending upon its previous values
     try {
       await runTransaction(firestore_db, async (transaction) => {
         const scoreDoc = await transaction.get(ref);
@@ -47,19 +56,19 @@ export const addWinFB = async (userInfo, numGuesses) => {
   }
 };
 
+// Record loss in firebase store for the given user.
 export const addLossFB = async (userInfo) => {
   const ref = doc(firestore_db, 'scores', userInfo.uid);
   const snap = await getDoc(ref);
   if (!snap.exists()) {
-    setDoc(doc(firestore_db, 'scores', userInfo.uid), {
-      gamesPlayed: 1,
-      gamesWon: 0,
-      curStreak: 0,
-      largestStreak: 0,
-      guessDist: Array.from({ length: MAX_GUESSES }, () => 0),
-    });
+    // If no record of scores have been recorded for this user, initialize a document with a loss
+    setDoc(
+      doc(firestore_db, 'scores', userInfo.uid),
+      INITIAL_SCORES_RECORD(LOSS)
+    );
     console.log('Doc Created');
   } else {
+    // Run Transaction to atomically update the document depending upon its previous values
     try {
       await runTransaction(firestore_db, async (transaction) => {
         const scoreDoc = await transaction.get(ref);
@@ -77,4 +86,35 @@ export const addLossFB = async (userInfo) => {
       console.log('Transaction failed:', e);
     }
   }
+};
+
+// Get scores from firebase
+export const getScoresFB = (
+  uid,
+  setGamesPlayed,
+  setGamesWon,
+  setCurStreak,
+  setLargestStreak,
+  setGuessDist
+) => {
+  const ref = doc(firestore_db, `scores/${uid}`);
+  const subscriber = onSnapshot(ref, {
+    next: (snapshot) => {
+      const data = snapshot.data();
+      if (data) {
+        // If document is found in firebase for this uid
+        setGamesPlayed(data.gamesPlayed);
+        setGamesWon(data.gamesWon);
+        setCurStreak(data.curStreak);
+        setLargestStreak(data.largestStreak);
+        setGuessDist(data.guessDist);
+      } else {
+        // If no document is found in firebase for this uid, initialize one
+        const scoresData = INITIAL_SCORES_RECORD(NEW);
+        setDoc(doc(firestore_db, 'scores', uid), scoresData);
+        console.log('Doc Created');
+      }
+    },
+  });
+  return subscriber;
 };

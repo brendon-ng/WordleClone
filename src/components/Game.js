@@ -16,16 +16,18 @@ const STATUS_WIN = 'win';
 function Game() {
   const dispatch = useDispatch();
 
+  // States
   const [targetWord, setTargetWord] = useState(generateTargetWord());
   const [gameStatus, setGameStatus] = useState(STATUS_ONGOING);
-
+  const { userInfo } = useSelector((state) => state.user);
   const { currentGuess, guesses, validGuess } = useSelector(
     (state) => state.guesses
   );
-  const { userInfo } = useSelector((state) => state.user);
 
   const addWin = useCallback(
     async (numGuesses) => {
+      // If playing offline, store scores in local async storage
+      // If logged in, store scores in Firebase
       if (userInfo.uid === OFFLINE_USER) {
         addWinLocal(numGuesses);
       } else {
@@ -36,6 +38,8 @@ function Game() {
   );
 
   const addLoss = useCallback(async () => {
+    // If playing offline, store scores in local async storage
+    // If logged in, store scores in Firebase
     if (userInfo.uid === OFFLINE_USER) {
       addLossLocal();
     } else {
@@ -43,23 +47,27 @@ function Game() {
     }
   }, [userInfo]);
 
+  // Triggers when guesses is updated, checks for a win or a loss
   useEffect(() => {
     if (guesses[guesses.length - 1] === targetWord) {
+      // Win
       setGameStatus(STATUS_WIN);
       addWin(guesses.length);
     } else if (guesses.length === MAX_GUESSES) {
+      // Loss
       setGameStatus(STATUS_LOSS);
       addLoss();
     }
   }, [guesses, addLoss, addWin, targetWord]);
 
+  // Handle New Game button press
   const newGame = () => {
     dispatch(resetGuesses());
     setGameStatus(STATUS_ONGOING);
     setTargetWord(generateTargetWord());
   };
 
-  const content = (
+  return (
     <View style={styles.guessContainer}>
       {Array.from(Array(MAX_GUESSES)).map((el, i) => (
         <Guess
@@ -87,8 +95,6 @@ function Game() {
       )}
     </View>
   );
-
-  return content;
 }
 
 const styles = StyleSheet.create({
