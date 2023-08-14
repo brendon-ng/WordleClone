@@ -1,4 +1,3 @@
-import { Ionicons } from '@expo/vector-icons';
 import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,6 +9,7 @@ import { OFFLINE_USER } from '../constants/apiConstants';
 import { useEffect, useState } from 'react';
 import { getScoresLocal } from '../apis/local-store';
 import { getScoresFB } from '../apis/firebase-store';
+import Modal from './Modal';
 
 function ScoresModal({ closeModal, height, width }) {
   const dispatch = useDispatch();
@@ -49,11 +49,6 @@ function ScoresModal({ closeModal, height, width }) {
     }
   }, [userInfo, resetStats]);
 
-  const handleOverlayPress = (event) => {
-    event.stopPropagation();
-    console.log('MODAL PRESSED');
-  };
-
   // Handle press of sign out button
   const handleSignOut = async () => {
     // Clear user info stored locally for persistence
@@ -88,13 +83,7 @@ function ScoresModal({ closeModal, height, width }) {
   });
 
   return (
-    <View
-      style={[styles.container, { height, width }]}
-      onTouchStart={handleOverlayPress}
-    >
-      <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-        <Ionicons name="close-outline" size={30} />
-      </TouchableOpacity>
+    <Modal height={height} width={width} closeModal={closeModal}>
       <View style={styles.labelContainer}>
         <Text style={styles.label}>Statistics</Text>
       </View>
@@ -139,32 +128,11 @@ function ScoresModal({ closeModal, height, width }) {
           </TouchableOpacity>
         )}
       </View>
-    </View>
+    </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    borderRadius: 10,
-    backgroundColor: 'white',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    borderRadius: 5,
-  },
   labelContainer: {
     padding: 10,
     marginTop: 50,

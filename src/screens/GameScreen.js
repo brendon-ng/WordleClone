@@ -50,13 +50,11 @@ function GameScreen() {
         <Ionicons name="bar-chart" size={30} />
       </TouchableOpacity>
       {modalVisible && (
-        <TouchableOpacity style={styles.screenView} onPress={closeModal}>
-          <ScoresModal
-            closeModal={closeModal}
-            height={screenHeight * 0.75}
-            width={screenWidth * 0.8}
-          />
-        </TouchableOpacity>
+        <ScoresModal
+          closeModal={closeModal}
+          height={screenHeight * 0.75}
+          width={screenWidth * 0.8}
+        />
       )}
     </SafeAreaView>
   );
@@ -91,17 +89,6 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  screenView: {
-    position: 'absolute',
-    flex: 1,
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
   },
 });
 
