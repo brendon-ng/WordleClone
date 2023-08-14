@@ -14,6 +14,7 @@ NOTE: You will lose the ability to log in with Google due to the nature of the a
  - Clone this repository
  - Ensure Node is installed and XCode with iPhone simulators is installed
  - Navigate to the main directory of this repo
+ - Add `secrets.js` file to the main directory (contact me directly for secrets file)
  - Run the following commands
 ```
 $ npm install
