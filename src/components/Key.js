@@ -7,15 +7,17 @@ import {
 } from '../store';
 import { DELETE, ENTER } from '../constants/keyboardConstants';
 
-const DEF_WIDTH = 7.5;
+const DEF_WIDTH = 7.5; // Default % width of key. widthMultiplier used to make delete and enter keys larger.
 
 function Key({ letter, widthMultiplier }) {
   const dispatch = useDispatch();
 
+  // States
   const col = useSelector((state) => {
     return state.keyboard.colors[letter];
   });
 
+  // Handle Press of current key
   const handlePress = () => {
     if (letter === DELETE) {
       dispatch(deleteFromCurrentGuess());

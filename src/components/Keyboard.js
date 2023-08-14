@@ -6,7 +6,7 @@ function Keyboard() {
   const row1 = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'];
   const row2 = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'];
   const row3 = [
-    { letter: ENTER, w: 2 },
+    { letter: ENTER, w: 2 }, // enter key twice as large as normal keys (widthMultiplier: 2)
     { letter: 'Z' },
     { letter: 'X' },
     { letter: 'C' },
@@ -14,7 +14,7 @@ function Keyboard() {
     { letter: 'B' },
     { letter: 'N' },
     { letter: 'M' },
-    { letter: DELETE, w: 2 },
+    { letter: DELETE, w: 2 }, // delete key twice as large as normal keys (widthMultiplier: 2)
   ];
   return (
     <View style={styles.container}>

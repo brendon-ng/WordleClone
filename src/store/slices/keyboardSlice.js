@@ -47,21 +47,25 @@ const keyboardSlice = createSlice({
     changeKeyColor(state, action) {
       // assume action is an object with letter: <letter typed>, color: <color>
       if (action.payload.color === COLOR_CORRECT) {
+        // If letter is correct
         state.colors[action.payload.letter] = action.payload.color;
       } else if (
         action.payload.color === COLOR_POSITION &&
         state.colors[action.payload.letter] === COLOR_UNGUESSED
       ) {
+        // Change color to "position" only if it is unguessed - if it is already correct we don't change
         state.colors[action.payload.letter] = action.payload.color;
       } else if (
         action.payload.color === COLOR_WRONG &&
         state.colors[action.payload.letter] === COLOR_UNGUESSED
       ) {
+        // Change color to "wrong" only if it is unguessed and not already correct or "position"
         state.colors[action.payload.letter] = action.payload.color;
       }
     },
   },
   extraReducers: (builder) => {
+    // When reset guesses is called, also reset keyboard
     builder.addCase(resetGuesses, () => initialState);
   },
 });

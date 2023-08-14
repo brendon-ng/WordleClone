@@ -11,6 +11,9 @@ const calcViewSize = (parentLayout, maxHeightPct, maxWidthPct) => {
   return size;
 };
 
+// SquareView component is a container that will always be a square
+// It will fill the height or width of the screen, whichever is smaller
+// OR if a maxHeightPct or maxWidthPct is declared, it will be at most as large as the declared percentage of the width/height
 function SquareView({
   parentLayout,
   maxHeightPct,

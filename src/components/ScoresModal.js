@@ -3,79 +3,47 @@ import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { signOut } from 'firebase/auth';
-import { COLOR_CORRECT, MAX_GUESSES } from '../constants/gameConstants';
-import { firebase_auth, firestore_db } from '../../firebaseConfig';
-import { setUserInfo } from '../store';
+import { COLOR_CORRECT } from '../constants/gameConstants';
+import { firebase_auth } from '../../firebaseConfig';
+import { resetGuesses, setUserInfo } from '../store';
 import { OFFLINE_USER } from '../constants/apiConstants';
 import { useEffect, useState } from 'react';
-import { onSnapshot, doc, setDoc } from 'firebase/firestore';
+import { getScoresLocal } from '../apis/local-store';
+import { getScoresFB } from '../apis/firebase-store';
 
 function ScoresModal({ closeModal, height, width }) {
   const dispatch = useDispatch();
+
+  // States
   const [gamesPlayed, setGamesPlayed] = useState(0);
   const [gamesWon, setGamesWon] = useState(0);
   const [curStreak, setCurStreak] = useState(0);
   const [largestStreak, setLargestStreak] = useState(0);
   const [guessDist, setGuessDist] = useState([]);
-  const [resetStats, setResetStats] = useState(0);
+  const [resetStats, setResetStats] = useState(0); // State used to trigger useEffect
+  const { userInfo } = useSelector((state) => state.user);
 
-  const { userInfo } = useSelector((state) => {
-    return state.user;
-  });
-
+  // Get and Update scores
   useEffect(() => {
     if (userInfo.uid === OFFLINE_USER) {
-      AsyncStorage.getItem('@scores').then((scoresJSON) => {
-        if (scoresJSON) {
-          const scoresData = JSON.parse(scoresJSON);
-          setGamesPlayed(scoresData.gamesPlayed);
-          setGamesWon(scoresData.gamesWon);
-          setCurStreak(scoresData.curStreak);
-          setLargestStreak(scoresData.largestStreak);
-          setGuessDist(scoresData.guessDist);
-        } else {
-          const scoresData = {
-            gamesPlayed: 0,
-            gamesWon: 0,
-            curStreak: 0,
-            largestStreak: 0,
-            guessDist: Array.from({ length: MAX_GUESSES }, () => 0),
-          };
-          AsyncStorage.setItem('@scores', JSON.stringify(scoresData)).then(
-            () => {
-              setGamesPlayed(scoresData.gamesPlayed);
-              setGamesWon(scoresData.gamesWon);
-              setCurStreak(scoresData.curStreak);
-              setLargestStreak(scoresData.largestStreak);
-              setGuessDist(scoresData.guessDist);
-              console.log('Initialized Local Storage scores');
-            }
-          );
-        }
+      // If playing offline, use local async storage
+      getScoresLocal().then((scoresData) => {
+        setGamesPlayed(scoresData.gamesPlayed);
+        setGamesWon(scoresData.gamesWon);
+        setCurStreak(scoresData.curStreak);
+        setLargestStreak(scoresData.largestStreak);
+        setGuessDist(scoresData.guessDist);
       });
     } else {
-      const ref = doc(firestore_db, `scores/${userInfo.uid}`);
-      const subscriber = onSnapshot(ref, {
-        next: (snapshot) => {
-          const data = snapshot.data();
-          if (data) {
-            setGamesPlayed(data.gamesPlayed);
-            setGamesWon(data.gamesWon);
-            setCurStreak(data.curStreak);
-            setLargestStreak(data.largestStreak);
-            setGuessDist(data.guessDist);
-          } else {
-            setDoc(doc(firestore_db, 'scores', userInfo.uid), {
-              gamesPlayed: 0,
-              gamesWon: 0,
-              curStreak: 0,
-              largestStreak: 0,
-              guessDist: Array.from({ length: MAX_GUESSES }, () => 0),
-            });
-            console.log('Doc Created');
-          }
-        },
-      });
+      // If logged in, use firebase
+      const subscriber = getScoresFB(
+        userInfo.uid,
+        setGamesPlayed,
+        setGamesWon,
+        setCurStreak,
+        setLargestStreak,
+        setGuessDist
+      );
 
       return () => subscriber();
     }
@@ -86,20 +54,26 @@ function ScoresModal({ closeModal, height, width }) {
     console.log('MODAL PRESSED');
   };
 
+  // Handle press of sign out button
   const handleSignOut = async () => {
+    // Clear user info stored locally for persistence
     await AsyncStorage.removeItem('@user');
     signOut(firebase_auth);
     dispatch(setUserInfo(null));
+    dispatch(resetGuesses()); // reset game as well
   };
 
+  // Handle press of reset stats button
   const clearLocalStats = async () => {
     await AsyncStorage.removeItem('@scores');
+    // trigger rerender of stats
     setResetStats(resetStats + 1);
   };
 
+  // Build histogram of distribution of guesses
   const max = Math.max(...guessDist);
-
   const histogram = guessDist.map((val, i) => {
+    // width of bar dependent on percentage of max value
     const w = val > 0 ? `${(100 * val) / max}%` : 'NaN%';
     return (
       <View key={i} style={styles.histogramBar}>
