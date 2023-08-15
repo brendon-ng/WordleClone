@@ -15,6 +15,7 @@ import {
   WEAK_PW,
 } from '../constants/apiConstants';
 
+// Constants for message switch statements
 const MESSAGE_INVALID_PASSWORD = 'invalid-pw';
 const MESSAGE_USER_NOT_FOUND = 'user-not-found';
 const MESSAGE_ACCOUNT_CREATED = 'account-created';
@@ -25,6 +26,7 @@ const MESSAGE_WEAK_PW = 'weak-pw';
 const MESSAGE_NONE = 'none';
 
 function SigninModal({ closeModal, height, width }) {
+  // States
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [confirmPW, setConfirmPW] = useState();
@@ -32,11 +34,13 @@ function SigninModal({ closeModal, height, width }) {
   const [messageStatus, setMessageStatus] = useState(MESSAGE_NONE);
 
   const handleCreateAccount = () => {
+    // Confirm password match
     if (password !== confirmPW) {
       setMessageStatus(MESSAGE_MISMATCH_PW);
       return;
     }
 
+    // Create User in Firebase
     createUserWithEmailAndPassword(firebase_auth, email, password)
       .then((userCredential) => {
         //Signed In
@@ -68,6 +72,7 @@ function SigninModal({ closeModal, height, width }) {
   const handleSignIn = () => {
     signInWithEmailAndPassword(firebase_auth, email, password)
       .then((userCredential) => {
+        // Signed In
         const user = userCredential.user;
         console.log('SIGNED IN:', user);
       })

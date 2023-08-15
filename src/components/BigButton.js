@@ -1,8 +1,9 @@
 import { StyleSheet, TouchableOpacity, Text } from 'react-native';
 
+// Custom component Button to keep consistent styling
 function BigButton({ onPress, title, children, ...rest }) {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
+    <TouchableOpacity style={styles.button} onPress={onPress} {...rest}>
       {title && <Text style={styles.title}>{title}</Text>}
       {children}
     </TouchableOpacity>
