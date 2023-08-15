@@ -119,13 +119,15 @@ function ScoresModal({ closeModal, height, width }) {
         >
           <Text>{userInfo.uid === OFFLINE_USER ? 'Sign In' : 'Sign Out'}</Text>
         </TouchableOpacity>
-        {userInfo.uid === OFFLINE_USER && (
+        {userInfo.uid === OFFLINE_USER ? (
           <TouchableOpacity
             style={styles.signOutButton}
             onPress={async () => clearLocalStats()}
           >
             <Text>Clear Stats</Text>
           </TouchableOpacity>
+        ) : (
+          <Text style={styles.email}>{userInfo.email}</Text>
         )}
       </View>
     </Modal>
@@ -200,6 +202,7 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     height: '20%',
+    alignItems: 'center',
   },
   signOutButton: {
     height: '30%',
@@ -212,6 +215,11 @@ const styles = StyleSheet.create({
   },
   signOutLabel: {
     fontWeight: 'bold',
+  },
+  email: {
+    fontWeight: 'bold',
+    paddingVertical: 10,
+    textAlign: 'center',
   },
 });
 
