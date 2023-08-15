@@ -11,6 +11,9 @@ import {
   EMAIL_IN_USE,
   INVALID_EMAIL,
   INVALID_PASSWORD,
+  MISSING_EMAIL,
+  MISSING_PASSWORD,
+  NO_NETWORK,
   USER_NOT_FOUND,
   WEAK_PW,
 } from '../constants/apiConstants';
@@ -23,6 +26,9 @@ const MESSAGE_ACCOUNT_EXISTS = 'account-exists';
 const MESSAGE_INVALID_EMAIL = 'invalid-email';
 const MESSAGE_MISMATCH_PW = 'mismatched-pw';
 const MESSAGE_WEAK_PW = 'weak-pw';
+const MESSAGE_MISSING_EMAIL = 'missing-email';
+const MESSAGE_MISSING_PW = 'missing-pw';
+const MESSAGE_NO_NETWORK = 'no-network';
 const MESSAGE_NONE = 'none';
 
 function SigninModal({ closeModal, height, width }) {
@@ -32,6 +38,7 @@ function SigninModal({ closeModal, height, width }) {
   const [confirmPW, setConfirmPW] = useState();
   const [create, setCreate] = useState(false);
   const [messageStatus, setMessageStatus] = useState(MESSAGE_NONE);
+  const [loading, setLoading] = useState(false);
 
   const handleCreateAccount = () => {
     // Confirm password match
@@ -39,6 +46,7 @@ function SigninModal({ closeModal, height, width }) {
       setMessageStatus(MESSAGE_MISMATCH_PW);
       return;
     }
+    setLoading(true);
 
     // Create User in Firebase
     createUserWithEmailAndPassword(firebase_auth, email, password)
@@ -62,14 +70,25 @@ function SigninModal({ closeModal, height, width }) {
           case EMAIL_IN_USE:
             setMessageStatus(MESSAGE_ACCOUNT_EXISTS);
             break;
+          case MISSING_EMAIL:
+            setMessageStatus(MESSAGE_MISSING_EMAIL);
+            break;
+          case MISSING_PASSWORD:
+            setMessageStatus(MESSAGE_MISSING_PW);
+            break;
+          case NO_NETWORK:
+            setMessageStatus(MESSAGE_NO_NETWORK);
+            break;
           default:
             setMessageStatus(errorMessage);
             break;
         }
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   const handleSignIn = () => {
+    setLoading(true);
     signInWithEmailAndPassword(firebase_auth, email, password)
       .then((userCredential) => {
         // Signed In
@@ -95,11 +114,36 @@ function SigninModal({ closeModal, height, width }) {
           case INVALID_PASSWORD:
             setMessageStatus(MESSAGE_INVALID_PASSWORD);
             break;
+          case MISSING_EMAIL:
+            setMessageStatus(MESSAGE_MISSING_EMAIL);
+            break;
+          case MISSING_PASSWORD:
+            setMessageStatus(MESSAGE_MISSING_PW);
+            break;
+          case NO_NETWORK:
+            setMessageStatus(MESSAGE_NO_NETWORK);
+            break;
           default:
             setMessageStatus(errorMessage);
             break;
         }
-      });
+      })
+      .finally(() => setLoading(false));
+  };
+
+  const handleEmailTextChange = (value) => {
+    setEmail(value);
+    setMessageStatus(MESSAGE_NONE);
+  };
+
+  const handlePWTextChange = (value) => {
+    setPassword(value);
+    setMessageStatus(MESSAGE_NONE);
+  };
+
+  const handleConfirmTextChange = (value) => {
+    setConfirmPW(value);
+    setMessageStatus(MESSAGE_NONE);
   };
 
   let message;
@@ -133,11 +177,20 @@ function SigninModal({ closeModal, height, width }) {
     case MESSAGE_WEAK_PW:
       message = <Text style={styles.badMessage}>Password too weak</Text>;
       break;
+    case MESSAGE_MISSING_EMAIL:
+      message = <Text style={styles.badMessage}>Please enter an email</Text>;
+      break;
+    case MESSAGE_MISSING_PW:
+      message = <Text style={styles.badMessage}>Please enter a password</Text>;
+      break;
+    case MESSAGE_NO_NETWORK:
+      message = <Text style={styles.badMessage}>Network Error</Text>;
+      break;
     case MESSAGE_NONE:
       message = <Text style={styles.goodMessage}> </Text>;
       break;
     default:
-      message = <Text style={styles.badMessage}>messageStatus</Text>;
+      message = <Text style={styles.badMessage}>{messageStatus}</Text>;
       break;
   }
 
@@ -151,7 +204,7 @@ function SigninModal({ closeModal, height, width }) {
       </View>
       <TextInput
         value={email}
-        onChangeText={setEmail}
+        onChangeText={handleEmailTextChange}
         placeholder="Email"
         style={styles.input}
         autoCapitalize="none"
@@ -159,7 +212,7 @@ function SigninModal({ closeModal, height, width }) {
       <TextInput
         secureTextEntry={true}
         value={password}
-        onChangeText={setPassword}
+        onChangeText={handlePWTextChange}
         placeholder="Password"
         style={styles.input}
         autoCapitalize="none"
@@ -168,7 +221,7 @@ function SigninModal({ closeModal, height, width }) {
         <TextInput
           secureTextEntry={true}
           value={confirmPW}
-          onChangeText={setConfirmPW}
+          onChangeText={handleConfirmTextChange}
           placeholder="Confirm Password"
           style={styles.input}
           autoCapitalize="none"
@@ -177,6 +230,7 @@ function SigninModal({ closeModal, height, width }) {
       <BigButton
         title={create ? 'Create Account' : 'Sign In'}
         onPress={create ? handleCreateAccount : handleSignIn}
+        loading={loading}
       />
       <View style={styles.createAccount}>
         <Button
@@ -214,9 +268,11 @@ const styles = StyleSheet.create({
   },
   goodMessage: {
     color: 'green',
+    textAlign: 'center',
   },
   badMessage: {
     color: 'red',
+    textAlign: 'center',
   },
 });
 

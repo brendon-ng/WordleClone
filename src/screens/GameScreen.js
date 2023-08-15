@@ -11,7 +11,6 @@ import SquareView from '../components/SquareView';
 import { useState } from 'react';
 import Keyboard from '../components/Keyboard';
 import ScoresModal from '../components/ScoresModal';
-import Modal from '../components/Modal';
 
 function GameScreen() {
   // States
