@@ -1,12 +1,12 @@
 # Wordle Clone
-### Clone of the popular NYT game, Wordle. With added ability to authenticate with Google and save your scores
+### Clone of the popular NYT game, Wordle. With added ability to authenticate and save your scores via Firebase using Google auth or email+password
 
 ## To Test
 ### On Device
 #### IOS
 Download the [Expo Go](https://apps.apple.com/app/id982107779) app first.
-Navigate to this link in the Safari browser: [exp://u.expo.dev/update/52584f00-280b-4a06-83e0-bb1db4015073](exp://u.expo.dev/update/52584f00-280b-4a06-83e0-bb1db4015073)  or scan the following QR code  
-<img width="264" alt="Screenshot 2023-08-14 at 4 25 16 PM" src="https://github.com/brendon-ng/WordleClone/assets/40370559/006686dd-993a-4073-94c0-aa4843a8cf47">
+Navigate to this link in the Safari browser: [exp://u.expo.dev/update/b78a12e7-5ace-4e21-b068-c81a0a4ea176](exp://u.expo.dev/update/b78a12e7-5ace-4e21-b068-c81a0a4ea176)  or scan the following QR code  
+<img width="269" alt="Screenshot 2023-08-15 at 12 22 14 PM" src="https://github.com/brendon-ng/WordleClone/assets/40370559/b027a31e-29e3-46b0-a0ee-5b3ae1262008">
   
 NOTE: You will lose the ability to log in with Google due to the nature of the app running in Expo Go. To distribute the app to run independently requires a paid Apple Developer account.
 
@@ -29,7 +29,9 @@ You will have the ability to authenticate with Google.
 <img width="407" alt="Screenshot 2023-08-14 at 10 45 02 AM" src="https://github.com/brendon-ng/WordleClone/assets/40370559/0b37937e-88cb-450f-841a-f26782636fad">
 <img width="402" alt="Screenshot 2023-08-14 at 10 41 42 AM" src="https://github.com/brendon-ng/WordleClone/assets/40370559/4ab36dab-a5da-43a5-9c22-e28047764179">
 <img width="398" alt="Screenshot 2023-08-14 at 11 07 42 AM" src="https://github.com/brendon-ng/WordleClone/assets/40370559/42de1fb0-9ea8-4e7f-bf93-9180412bce1b">
-<img width="398" alt="Screenshot 2023-08-12 at 3 10 03 PM" src="https://github.com/brendon-ng/WordleClone/assets/40370559/97a7445b-3ecf-47ab-9b9f-80c48b92d529">
+<img width="400" alt="Screenshot 2023-08-15 at 12 24 06 PM" src="https://github.com/brendon-ng/WordleClone/assets/40370559/ad3e5eeb-e749-441f-b601-13ba2f030cac">
 <img width="403" alt="Screenshot 2023-08-12 at 3 10 17 PM" src="https://github.com/brendon-ng/WordleClone/assets/40370559/b81900b2-db16-496b-bda2-a14ed9a8f439">
+<img width="400" alt="Screenshot 2023-08-15 at 12 24 46 PM" src="https://github.com/brendon-ng/WordleClone/assets/40370559/c4b1c81d-e79d-4a02-a14c-d90a029ad897">
+<img width="401" alt="Screenshot 2023-08-15 at 12 24 56 PM" src="https://github.com/brendon-ng/WordleClone/assets/40370559/730ce77e-0951-46cb-8f9d-617dead532b0">
 
 
