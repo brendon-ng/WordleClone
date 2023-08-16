@@ -10,6 +10,7 @@ import { COLOR_CORRECT } from '../constants/gameConstants';
 import { useState } from 'react';
 import SigninModal from '../components/SigninModal';
 import BigButton from '../components/BigButton';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function SignInScreen({ promptAsync, useOffline }) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -31,13 +32,13 @@ export default function SignInScreen({ promptAsync, useOffline }) {
       <View style={styles.labelContainer}>
         <Text style={styles.label}>Sign In</Text>
       </View>
-      <BigButton title="Sign In With Email" onPress={openModal} />
+      <BigButton title="Sign In With Email" onPress={openModal}>
+        <Ionicons name='mail-outline' size={29} style={styles.logo}/>
+      </BigButton>
       <BigButton title="Sign In With Google" onPress={() => promptAsync()}>
         <Image
           style={styles.logo}
-          source={{
-            uri: 'https://www.transparentpng.com/thumb/google-logo/google-logo-png-icon-free-download-SUF63j.png',
-          }}
+          source={require('../../assets/images/google.png')}
         />
       </BigButton>
       <View style={styles.offline}>
@@ -77,16 +78,6 @@ const styles = StyleSheet.create({
   label: {
     fontWeight: 'bold',
     fontSize: 30,
-  },
-  button: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 50,
-    marginVertical: 10,
-    aspectRatio: 5,
-    borderRadius: 10,
-    backgroundColor: '#DDDDDD',
   },
   logo: {
     width: 30,

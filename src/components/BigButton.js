@@ -1,11 +1,22 @@
-import { StyleSheet, TouchableOpacity, Text } from 'react-native';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  ActivityIndicator,
+} from 'react-native';
 
 // Custom component Button to keep consistent styling
-function BigButton({ onPress, title, children, ...rest }) {
+function BigButton({ onPress, title, loading, children, ...rest }) {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress} {...rest}>
-      {title && <Text style={styles.title}>{title}</Text>}
-      {children}
+    <TouchableOpacity
+      style={styles.button}
+      onPress={onPress}
+      disabled={loading}
+      {...rest}
+    >
+      {loading && <ActivityIndicator />}
+      {!loading && title && <Text style={styles.title}>{title}</Text>}
+      {!loading && children}
     </TouchableOpacity>
   );
 }
