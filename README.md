@@ -4,9 +4,12 @@
 ## To Test
 ### On Device
 #### IOS
-Download the [Expo Go](https://apps.apple.com/app/id982107779) app first.
-Navigate to this link in the Safari browser: [exp://u.expo.dev/update/b78a12e7-5ace-4e21-b068-c81a0a4ea176](exp://u.expo.dev/update/b78a12e7-5ace-4e21-b068-c81a0a4ea176)  or scan the following QR code  
-<img width="269" alt="Screenshot 2023-08-15 at 12 22 14 PM" src="https://github.com/brendon-ng/WordleClone/assets/40370559/b027a31e-29e3-46b0-a0ee-5b3ae1262008">
+Download the [Expo Go](https://apps.apple.com/app/id982107779) app first.  
+
+Then, navigate to this link in the Safari browser:   
+**[exp://u.expo.dev/update/63dee0a0-284d-467d-bbcc-ef66e6618bc3](exp://u.expo.dev/update/63dee0a0-284d-467d-bbcc-ef66e6618bc3)**  
+or scan the following QR code  
+<img width="267" alt="Screenshot 2023-08-15 at 5 09 21 PM" src="https://github.com/brendon-ng/WordleClone/assets/40370559/915e2629-b732-4bdd-b939-ac0859d6d482">
   
 NOTE: You will lose the ability to log in with Google due to the nature of the app running in Expo Go. To distribute the app to run independently requires a paid Apple Developer account.
 
